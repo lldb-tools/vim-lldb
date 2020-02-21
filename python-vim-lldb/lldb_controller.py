@@ -10,6 +10,7 @@ import re
 import sys
 import lldb
 import vim
+from utility import *
 from vim_ui import UI
 
 # =================================================
@@ -18,7 +19,7 @@ from vim_ui import UI
 
 # Shamelessly copy/pasted from lldbutil.py in the test suite
 
-
+# current to lldb@v11 see lldb.py ~223 for values
 def state_type_to_str(enum):
     """Returns the stateType string given an enum."""
     if enum == lldb.eStateInvalid:
@@ -78,6 +79,14 @@ class LLDBController(object):
         self.load_dependent_modules = True
 
         self.dbg = lldb.SBDebugger.Create()
+        # during step/continue do not return from function until process stops
+        # async is enabled by default, but overridden in vimrc g:lldb_enable_async
+        vimrc_lldb_async = vim.eval('s:lldb_async')
+        if (vimrc_lldb_async == 0):
+            self.dbg.SetAsync(False)
+        else:
+            self.dbg.SetAsync(True)
+
         self.commandInterpreter = self.dbg.GetCommandInterpreter()
 
         self.ui = UI()
@@ -93,6 +102,7 @@ class LLDBController(object):
         p = int(p) - 1
 
         result = lldb.SBStringList()
+        # print("DEBUG: completeCommand result : %s"% result)
         num = self.commandInterpreter.HandleCompletion(l, p, 1, -1, result)
 
         if num == -1:
@@ -314,6 +324,9 @@ class LLDBController(object):
         return (result.Succeeded(), result.GetOutput()
                 if result.Succeeded() else result.GetError())
 
+    # check if ci.CommandExists(command) before exec
+    # may need this check in the future if auto-generating commands
+    # currently they are expicitly whitelisted in lldb.vim so we are ok
     def doCommand(
             self,
             command,
@@ -325,12 +338,13 @@ class LLDBController(object):
         if success:
             self.ui.update(self.target, "", self, goto_file)
             if len(output) > 0 and print_on_success:
-                print(output)
+                output = escape_ansi(output.encode("utf-8", "replace"))
+                vim.command('echohl lldb_output | echo "' + str(output.decode("utf-8"))  + '" | echohl None')
         else:
             sys.stderr.write(output)
 
     def getCommandOutput(self, command, command_args=""):
-        """ runs cmd in the command interpreter andreturns (status, result) """
+        """ runs cmd in the command interpreter and returns (status, result) """
         result = lldb.SBCommandReturnObject()
         cmd = "%s %s" % (command, command_args)
         self.commandInterpreter.HandleCommand(cmd, result)
@@ -399,17 +413,11 @@ def returnCompleteCommand(a, l, p):
 def returnCompleteWindow(a, l, p):
     """ Returns a "\n"-separated string with possible completion results
         for commands that expect a window name parameter (like hide/show).
-        FIXME: connect to ctrl.ui instead of hardcoding the list here
     """
     separator = "\n"
-    results = [
-        'breakpoints',
-        'backtrace',
-        'disassembly',
-        'locals',
-        'threads',
-        'registers']
+    results = ul.defaultPanes
     vim.command('return "%s%s"' % (separator.join(results), separator))
 
 global ctrl
+
 ctrl = LLDBController()

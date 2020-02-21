@@ -53,7 +53,9 @@ class UI:
 
     def activate(self):
         """ Activate UI: display default set of panes """
+
         self.paneCol.prepare(self.defaultPanes)
+
 
     def get_user_buffers(self, filter_name=None):
         """ Returns a list of buffers that are not a part of the LLDB UI. That is, they
