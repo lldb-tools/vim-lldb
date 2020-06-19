@@ -9,13 +9,13 @@ Installation
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
-Plug '67hz/vim-lldb'
+Plug 'lldb-tools/vim-lldb'
 ```
 
 ### Using [vundle](https://github.com/VundleVim/Vundle.Vim)
 
 ```vim
-Plugin '67hz/vim-lldb'
+Plugin 'lldb-tools/vim-lldb'
 ```
 
 - Make sure to use Vim 8.2 or above
