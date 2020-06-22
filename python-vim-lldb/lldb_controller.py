@@ -102,7 +102,6 @@ class LLDBController(object):
         p = int(p) - 1
 
         result = lldb.SBStringList()
-        # print("DEBUG: completeCommand result : %s"% result)
         num = self.commandInterpreter.HandleCompletion(l, p, 1, -1, result)
 
         if num == -1:

@@ -6,7 +6,7 @@ if !has('pythonx')
   call confirm('ERROR: This Vim installation does not have python support. lldb debugging is disabled.')
   finish
 elseif (has('python3'))
-  " prefer python3 to python2
+  " prefer Python 3 over 2
   let s:lldb_python_version = 3
 elseif (has('python'))
   let s:lldb_python_version = ""

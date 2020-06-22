@@ -1,7 +1,8 @@
 vim-lldb
 ========
 
-LLDB debugging in Vim for Python2 and Python3.
+LLDB debugging in Vim.
+
 
 Installation
 ------------
@@ -18,8 +19,13 @@ Plug 'lldb-tools/vim-lldb'
 Plugin 'lldb-tools/vim-lldb'
 ```
 
-- Make sure to use Vim 8.2 or above
-- Have Python or Python3 support in Vim
+System Requirements
+-------------------
+
+- Vim 8.2 or above
+- Have [Python or Python 3 support enabled in Vim](#verifying-python-support)*
+
+*Vim can only be compiled with support for a single version of Python. It is recommended to use Python 3 as many Vim plugins only work with Python 3 support in Vim.
 
 vim-lldb Commands
 --------
@@ -115,27 +121,27 @@ let g:lldb_async = 1
 Verifying Python Support
 ------------------------
 
-This plugin leverages the `LLDB` module which requires python support in vim. Vim's python version must match `LLDB`'s python interpreter version.
+This plugin leverages the `LLDB` module which requires Python support in Vim. Vim's Python version must match `LLDB`'s Python interpreter version exactly.
 
-To verify Vim's python support, run:
+To verify Vim's Python support, run:
 
     vim --version | grep python
 
-The output must contain either `+python` or `+python3`
+The output must contain either `+python` or `+python3` indicating support for Python 2 or Python 3, respectively. It is recommended to use Vim compiled with Python 3 as many Vim plugins only support this option.
 
-The above command displays the major version of vim. It is possible that a different minor/patch version is running between `LLDB` and python. To verify vim's exact python version, launch vim and run: 
+If Vim warns that it is unable to load vim-lldb on launch, there may be mismatched versions of Python running between `LLDB` and Vim's Python interpreter. Versions must match exactly. To verify Vim's exact Python version, launch Vim and run: 
  
      :pyx << EOF
      import sys
      print(sys.version)
      EOF
      
-     " verify this output matches lldb's
+     " verify this version matches lldb's output below
      3.7.6 (default, ...)
 
 
 
-Verify LLDB's version of python by launching the python interpreter in LLDB: 
+Verify LLDB's version of Python by launching the Python interpreter in LLDB: 
 
     $> lldb
     (lldb) script
@@ -145,8 +151,8 @@ Verify LLDB's version of python by launching the python interpreter in LLDB:
     3.7.6 (default, ...)
 
 
-If python versions are mismatched, either recompile Vim to match the same version as LLDB or vice-versa.
+If Python versions are mismatched, either recompile Vim to match the exact version as LLDB or vice-versa. See [lldb caveats](https://lldb.llvm.org/resources/caveats.html) for details.
 
-See **Customization** for specifying lldb path in `vimrc`.
+See [Customization](#customization) for specifying lldb path in `vimrc`.
 
 
