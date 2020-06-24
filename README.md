@@ -143,11 +143,7 @@ If Vim warns that it is unable to load vim-lldb on launch, there may be mismatch
 
 Verify LLDB's version of Python by launching the Python interpreter in LLDB: 
 
-    $> lldb
-    (lldb) script
-    Python Interactive Interpreter
-    >>> import sys
-    >>> print(svs.version)
+    $> lldb -b -o "script import sys; print(sys.version)"
     3.7.6 (default, ...)
 
 
