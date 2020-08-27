@@ -7,6 +7,10 @@ LLDB debugging in Vim.
 Installation
 ------------
 
+### Using Vim's native package manager is recommended
+
+See `:help packages` for details 
+
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
@@ -25,7 +29,6 @@ System Requirements
 - Vim 8.2 or above
 - Have [Python or Python 3 support enabled in Vim](#verifying-python-support)*
 
-*Vim can only be compiled with support for a single version of Python. It is recommended to use Python 3 as many Vim plugins only work with Python 3 support in Vim.
 
 vim-lldb Commands
 --------

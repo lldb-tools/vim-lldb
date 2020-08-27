@@ -62,8 +62,8 @@ def import_lldb():
 
     # On Mac OS X, try the default path to Xcode lldb module
     if "darwin" in sys.platform:
-        python_major_version = vim.eval("s:lldb_python_version")
-        xcode_python_path = "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/Current/Resources/Python%s/"% python_major_version
+        xcode_path_modifier = vim.eval("s:lldb_python_version")
+        xcode_python_path = "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/Current/Resources/Python%s/"% xcode_path_modifier
         sys.path.append(xcode_python_path)
 
         try:
