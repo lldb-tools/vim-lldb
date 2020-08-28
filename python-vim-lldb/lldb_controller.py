@@ -13,6 +13,7 @@ import vim
 from utility import *
 from vim_ui import UI
 
+
 # =================================================
 # Convert some enum value to its string counterpart
 # =================================================
@@ -338,7 +339,12 @@ class LLDBController(object):
             self.ui.update(self.target, "", self, goto_file)
             if len(output) > 0 and print_on_success:
                 output = escape_ansi(output.encode("utf-8", "replace"))
-                vim.command('echohl lldb_output | echo "' + str(output.decode("utf-8"))  + '" | echohl None')
+                # vim uses "''" to escape single quotes
+                output = str(output.decode("utf-8")).replace("'", "''") 
+                vim.command('echohl lldb_output')
+                vim.command("let g:lldb_msg='%s'" % output)
+                vim.command('echo lldb_msg')
+                vim.command('echohl None')
         else:
             sys.stderr.write(output)
 
