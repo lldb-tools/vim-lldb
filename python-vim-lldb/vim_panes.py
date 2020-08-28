@@ -37,6 +37,8 @@
 import lldb
 import vim
 
+from utility import *
+
 import sys
 
 # ==============================================================
@@ -231,6 +233,7 @@ class VimPane(object):
 
     SELECTED_HIGHLIGHT_NAME_GUI = 'Cursor'
     SELECTED_HIGHLIGHT_NAME_TERM = 'lldb_selected'
+
     SELECTED_HIGHLIGHT_COLOUR_TERM = 'darkblue'
 
     MSG_NO_TARGET = "Target does not exist."
@@ -368,7 +371,9 @@ class VimPane(object):
         """ replace buffer with msg"""
         self.prepare()
 
-        msg = str(msg.encode("utf-8", "replace")).split('\n')
+        msg = escape_ansi(msg.encode("utf-8", "replace"))
+        msg = str(msg.decode("utf-8")).split('\n')
+
         try:
             self.buffer.append(msg)
             vim.command("execute \"normal ggdd\"")
@@ -519,8 +524,11 @@ class RegistersPane(FrameKeyValuePane):
     def get_frame_content(self, frame):
         """ Returns a list of key-value pairs ("name", "value") of registers in frame """
 
+        # print("frame.getRegisters: %s"% frame.GetRegisters())
         result = []
         for register_sets in frame.GetRegisters():
+            # print("reg set: %s"% register_sets.GetName())
+
             # hack the register group name into the list of registers...
             result.append((" = = %s =" % register_sets.GetName(), ""))
 
