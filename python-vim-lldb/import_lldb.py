@@ -36,7 +36,7 @@ def import_lldb():
                 "%s -P" %
                 lldb_executable,
                 shell=True,
-                stderr=fnull).strip()
+                stderr=fnull).strip().decode()
         if not os.path.exists(lldb_minus_p_path):
             # lldb -P returned invalid path, probably too old
             pass
