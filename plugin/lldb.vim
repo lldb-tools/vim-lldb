@@ -18,6 +18,23 @@ function! s:InitLldbPlugin()
     return
   endif
 
+  "
+  " Setup the python3 interpreter path
+  "
+  let vim_lldb_pydir = s:FindPythonScriptDir()
+  try
+    execute 'python3 import sys; sys.path.append("' . vim_lldb_pydir . '")'
+    execute 'py3file ' . vim_lldb_pydir . '/plugin.py'
+  catch
+    echom 'Error loading lldb module; vim-lldb will be disabled. Check LLDB installation or set LLDB environment variable.'
+    return
+  endtry
+
+  if exists("s:lldb_disabled")
+    echom 'Error loading lldb module; vim-lldb will be disabled. Check LLDB installation or set LLDB environment variable.'
+    return
+  endif
+
   " Key-Bindings
   " FIXME: choose sensible keybindings for:
   " - process: start, interrupt, continue, continue-to-cursor
@@ -27,12 +44,6 @@ function! s:InitLldbPlugin()
     " Apple-B toggles breakpoint on cursor
     map <D-B>     :Lbreakpoint<CR>
   endif
-
-  "
-  " Setup the python3 interpreter path
-  "
-  let vim_lldb_pydir = s:FindPythonScriptDir()
-  execute 'python3 import sys; sys.path.append("' . vim_lldb_pydir . '")'
 
   "
   " Register :L<Command>
@@ -115,8 +126,6 @@ function! s:InitLldbPlugin()
   autocmd CursorMoved * :Lrefresh
   autocmd CursorHold  * :Lrefresh
   autocmd VimLeavePre * python3 ctrl.doExit()
-
-  execute 'py3file ' . vim_lldb_pydir . '/plugin.py'
 endfunction()
 
 function! s:CompleteCommand(A, L, P)
@@ -138,14 +147,14 @@ EOF
 endfunction()
 
 " Returns cword if search term is empty
-function! s:CursorWord(term) 
-  return empty(a:term) ? expand('<cword>') : a:term 
+function! s:CursorWord(term)
+  return empty(a:term) ? expand('<cword>') : a:term
 endfunction()
 
 " Returns cleaned cWORD if search term is empty
-function! s:CursorWORD(term) 
+function! s:CursorWORD(term)
   " Will strip all non-alphabetic characters from both sides
-  return empty(a:term) ?  substitute(expand('<cWORD>'), '^\A*\(.\{-}\)\A*$', '\1', '') : a:term 
+  return empty(a:term) ?  substitute(expand('<cWORD>'), '^\A*\(.\{-}\)\A*$', '\1', '') : a:term
 endfunction()
 
 call s:InitLldbPlugin()
