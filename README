@@ -11,14 +11,14 @@ This plugin is known to work with the following flavours of Vim:
   * Linux (tested on Ubuntu 12.04/12.10):
       * vim/gvim (from vim-gnome package version 7.3)
 
-  * Mac OS X (tested on Mountain Lion)
-      * Vim command-line (7.3 from Xcode)
+  * macOS (tested on Monterey)
+      * Vim command-line (8.2 from homebrew)
       * MacVim 7.3
 
 To install the plugin, ensure you have
   * a working version of lldb on your path, or the environment variable LLDB
     pointing to the lldb binary you would like to use.
-  * a python-enabled vim (check with ":python print 2")
+  * a python3-enabled vim (check with "vim --version | grep python3")
 
 
 Installation
